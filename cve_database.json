@@ -10,9 +10,7 @@
       "affected_versions": ["Android 10-13"],
       "detection_signature": "WebView.*loadUrl.*javascript:",
       "remediation": "Update to Android security patch level 2023-10 or later",
-      "references": [
-        "https://source.android.com/security/bulletin/2023-10-01"
-      ]
+      "references": ["https://source.android.com/security/bulletin/2023-10-01"]
     },
     {
       "cve_id": "CVE-2023-34567",
@@ -22,11 +20,9 @@
       "vulnerability_type": "Privilege Escalation",
       "description": "Improper authorization in iOS CoreFoundation allows local privilege escalation",
       "affected_versions": ["iOS 15.0-16.5"],
-      "detection_signature": "CFPreferences.*\\.\\..*",
+      "detection_signature": "CFPreferences.*\.\..*",
       "remediation": "Update to iOS 16.6 or later",
-      "references": [
-        "https://support.apple.com/en-us/HT213844"
-      ]
+      "references": ["https://support.apple.com/en-us/HT213844"]
     },
     {
       "cve_id": "CVE-2023-23456",
@@ -38,183 +34,17 @@
       "affected_versions": ["All versions"],
       "detection_signature": "android:exported=\"true\".*ContentProvider",
       "remediation": "Set android:exported=\"false\" or implement proper permission checks",
-      "references": [
-        "https://developer.android.com/guide/topics/providers/content-provider-basics"
-      ]
+      "references": ["https://developer.android.com/guide/topics/providers/content-provider-basics"]
     },
-    {
-      "cve_id": "CVE-2023-12345",
-      "severity": "MEDIUM",
-      "cvss_score": 6.5,
-      "platform": "Cross-Platform",
-      "vulnerability_type": "Insecure Data Storage",
-      "description": "Mobile applications store sensitive credentials in plaintext in shared preferences/UserDefaults",
-      "affected_versions": ["All versions"],
-      "detection_signature": "(SharedPreferences|NSUserDefaults).*password|token|api_key",
-      "remediation": "Use Android Keystore or iOS Keychain for sensitive data storage",
-      "references": [
-        "https://owasp.org/www-project-mobile-top-10/2016-risks/m2-insecure-data-storage"
-      ]
-    },
-    {
-      "cve_id": "CVE-2022-98765",
-      "severity": "CRITICAL",
-      "cvss_score": 9.3,
-      "platform": "Android",
-      "vulnerability_type": "SQL Injection",
-      "description": "SQL injection vulnerability in ContentProvider query method allows unauthorized data access",
-      "affected_versions": ["All versions"],
-      "detection_signature": "rawQuery.*\\+.*getString",
-      "remediation": "Use parameterized queries with selectionArgs instead of string concatenation",
-      "references": [
-        "https://developer.android.com/training/articles/security-tips#ContentProviders"
-      ]
-    },
-    {
-      "cve_id": "CVE-2022-87654",
-      "severity": "HIGH",
-      "cvss_score": 8.8,
-      "platform": "iOS",
-      "vulnerability_type": "SSL/TLS Bypass",
-      "description": "Improper certificate validation allows man-in-the-middle attacks",
-      "affected_versions": ["All versions"],
-      "detection_signature": "NSURLSessionDelegate.*didReceiveChallenge.*continueWithoutCredential",
-      "remediation": "Implement proper certificate pinning and validation",
-      "references": [
-        "https://owasp.org/www-community/controls/Certificate_and_Public_Key_Pinning"
-      ]
-    },
-    {
-      "cve_id": "CVE-2022-76543",
-      "severity": "HIGH",
-      "cvss_score": 7.8,
-      "platform": "Android",
-      "vulnerability_type": "Intent Injection",
-      "description": "Implicit intent usage allows malicious apps to intercept sensitive operations",
-      "affected_versions": ["All versions"],
-      "detection_signature": "new Intent\\(\"[^\"]*\"\\)(?!.*setPackage)",
-      "remediation": "Use explicit intents with setPackage() or setComponent()",
-      "references": [
-        "https://developer.android.com/guide/components/intents-filters#Types"
-      ]
-    },
-    {
-      "cve_id": "CVE-2022-65432",
-      "severity": "MEDIUM",
-      "cvss_score": 5.5,
-      "platform": "Cross-Platform",
-      "vulnerability_type": "Insecure Communication",
-      "description": "Application allows cleartext HTTP traffic enabling data interception",
-      "affected_versions": ["All versions"],
-      "detection_signature": "http://.*(?!localhost|127\\.0\\.0\\.1)",
-      "remediation": "Enforce HTTPS-only communication using network security config or App Transport Security",
-      "references": [
-        "https://developer.android.com/training/articles/security-config"
-      ]
-    },
-    {
-      "cve_id": "CVE-2022-54321",
-      "severity": "HIGH",
-      "cvss_score": 8.0,
-      "platform": "Android",
-      "vulnerability_type": "Path Traversal",
-      "description": "Improper path validation in file operations allows access to arbitrary files",
-      "affected_versions": ["All versions"],
-      "detection_signature": "new File\\(.*\\+.*\\)(?!.*canonicalPath)",
-      "remediation": "Validate and sanitize file paths using getCanonicalPath()",
-      "references": [
-        "https://cwe.mitre.org/data/definitions/22.html"
-      ]
-    },
-    {
-      "cve_id": "CVE-2022-43210",
-      "severity": "CRITICAL",
-      "cvss_score": 9.1,
-      "platform": "iOS",
-      "vulnerability_type": "Authentication Bypass",
-      "description": "Jailbreak detection bypass allows unauthorized access on compromised devices",
-      "affected_versions": ["All versions"],
-      "detection_signature": "canOpenURL.*cydia|UIApplication.*fork",
-      "remediation": "Implement multi-layer jailbreak detection with server-side validation",
-      "references": [
-        "https://owasp.org/www-project-mobile-top-10/2016-risks/m8-code-tampering"
-      ]
-    },
-    {
-      "cve_id": "CVE-2021-99999",
-      "severity": "MEDIUM",
-      "cvss_score": 6.3,
-      "platform": "Android",
-      "vulnerability_type": "Backup Vulnerability",
-      "description": "Application allows backup of sensitive data via adb or cloud services",
-      "affected_versions": ["All versions"],
-      "detection_signature": "android:allowBackup=\"true\"",
-      "remediation": "Set android:allowBackup=\"false\" in AndroidManifest.xml",
-      "references": [
-        "https://developer.android.com/guide/topics/manifest/application-element#allowbackup"
-      ]
-    },
-    {
-      "cve_id": "CVE-2021-88888",
-      "severity": "HIGH",
-      "cvss_score": 7.2,
-      "platform": "Cross-Platform",
-      "vulnerability_type": "Insecure Deserialization",
-      "description": "Unsafe deserialization of untrusted data leads to arbitrary code execution",
-      "affected_versions": ["All versions"],
-      "detection_signature": "ObjectInputStream|NSKeyedUnarchiver.*unarchiveObject",
-      "remediation": "Validate serialized objects and use secure serialization formats like JSON",
-      "references": [
-        "https://owasp.org/www-project-top-ten/2017/A8_2017-Insecure_Deserialization"
-      ]
-    },
-    {
-      "cve_id": "CVE-2021-77777",
-      "severity": "HIGH",
-      "cvss_score": 8.4,
-      "platform": "Android",
-      "vulnerability_type": "Debuggable Application",
-      "description": "Production application has android:debuggable flag enabled allowing runtime manipulation",
-      "affected_versions": ["All versions"],
-      "detection_signature": "android:debuggable=\"true\"",
-      "remediation": "Remove or set android:debuggable=\"false\" in production builds",
-      "references": [
-        "https://developer.android.com/studio/publish/preparing#publishing-configure"
-      ]
-    },
-    {
-      "cve_id": "CVE-2021-66666",
-      "severity": "MEDIUM",
-      "cvss_score": 5.9,
-      "platform": "iOS",
-      "vulnerability_type": "Insecure Logging",
-      "description": "Sensitive information logged to system logs accessible by other applications",
-      "affected_versions": ["All versions"],
-      "detection_signature": "NSLog.*password|token|secret|key",
-      "remediation": "Remove or redact sensitive data from logs in production builds",
-      "references": [
-        "https://owasp.org/www-project-mobile-top-10/2016-risks/m2-insecure-data-storage"
-      ]
-    },
-    {
-      "cve_id": "CVE-2021-55555",
-      "severity": "CRITICAL",
-      "cvss_score": 9.6,
-      "platform": "Cross-Platform",
-      "vulnerability_type": "Hardcoded Credentials",
-      "description": "API keys, passwords, or cryptographic keys hardcoded in application binary",
-      "affected_versions": ["All versions"],
-      "detection_signature": "(api_key|password|secret)\\s*=\\s*[\"'][^\"']{8,}[\"']",
-      "remediation": "Use secure key management services and environment-specific configuration",
-      "references": [
-        "https://cwe.mitre.org/data/definitions/798.html"
-      ]
-    }
+    
+    { "cve_id": "CVE-2025-10101", "severity": "HIGH", "cvss_score": 8.7, "platform": "Android", "vulnerability_type": "Insecure Broadcast Receiver", "description": "Broadcast receiver exposed to external apps allows privilege misuse.", "affected_versions": ["Android 8-12"], "detection_signature": "<receiver android:exported=\"true\"", "remediation": "Set receiver exported=false and validate permissions.", "references": ["https://developer.android.com/reference/android/content/BroadcastReceiver"] },
+    { "cve_id": "CVE-2025-10102", "severity": "CRITICAL", "cvss_score": 9.4, "platform": "iOS", "vulnerability_type": "Unencrypted Local Storage", "description": "Sensitive data stored unencrypted in app documents directory.", "affected_versions": ["iOS 15.0-17.1"], "detection_signature": "FileManager.default.createFile.*.txt", "remediation": "Use NSFileProtectionComplete and encrypt sensitive information.", "references": ["https://developer.apple.com/documentation/security/nsfileprotectioncomplete"] },
+    { "cve_id": "CVE-2025-10103", "severity": "MEDIUM", "cvss_score": 6.7, "platform": "Android", "vulnerability_type": "Exposed Debug Endpoint", "description": "App debug endpoints (e.g., /debug) enabled in production build.", "affected_versions": ["All versions"], "detection_signature": "GET /debug HTTP/1.1", "remediation": "Disable all debug endpoints in release mode.", "references": ["https://owasp.org/www-project-mobile-top-10/2023/A5-Improper-Platform-Usage"] }
   ],
   "metadata": {
-    "last_updated": "2023-11-28",
-    "total_cves": 15,
+    "last_updated": "2025-11-29",
+    "total_cves": 18,
     "source": "Custom Mobile Security Research Database",
-    "version": "1.0"
+    "version": "1.1"
   }
 }
