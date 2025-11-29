@@ -1,4 +1,4 @@
-# Cyber-Architect Mobile Penetration Testing Tool
+# CyberMobilePenTest
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
@@ -7,13 +7,14 @@
 
 ## Overview
 
-Cyber-Architect is an enterprise-grade mobile penetration testing suite designed for security professionals, architects, and DevSecOps teams. It provides automated vulnerability scanning, comprehensive API testing, and detailed reporting capabilities aligned with industry standards including OWASP, GDPR, and PCI-DSS.
+CyberMobilePenTest is an enterprise-grade mobile penetration testing suite designed for security professionals, architects, and DevSecOps teams. It provides automated vulnerability scanning, comprehensive API testing, and detailed reporting capabilities aligned with industry standards including OWASP, GDPR, and PCI-DSS.
 
 This tool is built for scalability, modularity, and integration into modern DevSecOps pipelines, with features suitable for both on-premise and cloud-based deployments.
 
 ## Key Features
 
 ### Core Capabilities
+
 - **Automated Vulnerability Scanning**: Comprehensive detection of common mobile security vulnerabilities
 - **API Penetration Testing**: In-depth REST/GraphQL API security assessment
 - **Mobile Security Testing**: OWASP Mobile Top 10 and MAPT framework compliance
@@ -21,6 +22,7 @@ This tool is built for scalability, modularity, and integration into modern DevS
 - **Enterprise Reporting**: Detailed, compliance-ready security reports
 
 ### Professional Features
+
 - **Modular Architecture**: Extensible plugin system for custom security tests
 - **DevSecOps Integration**: CI/CD pipeline integration support
 - **Compliance Frameworks**: OWASP, GDPR, PCI-DSS, and ISO 27001 compliance checks
@@ -31,12 +33,14 @@ This tool is built for scalability, modularity, and integration into modern DevS
 ## System Requirements
 
 ### Minimum Requirements
+
 - Python 3.8 or higher
 - 4GB RAM (8GB recommended)
 - 10GB disk space
 - Linux/macOS/Windows with Docker support
 
 ### Dependencies
+
 - requests >= 2.28.0
 - cryptography >= 38.0.0
 - flask >= 2.2.0
@@ -47,84 +51,123 @@ This tool is built for scalability, modularity, and integration into modern DevS
 ## Installation
 
 ### Method 1: Docker (Recommended)
+
 ```bash
-docker build -t cyber-architect:latest .
-docker run -d -p 5000:5000 --name ca-scanner cyber-architect:latest
+docker build -t cybermobilepentest:latest .
+docker run -d -p 5000:5000 --name cmp-scanner cybermobilepentest:latest
 ```
 
-### Method 2: Local Setup
+### Method 2: Manual Installation
+
 ```bash
-# Clone repository
-git clone https://github.com/Shanmukhasrisai/Cyber-Architect-Mobile-Penetration-Testing-Tool.git
-cd Cyber-Architect-Mobile-Penetration-Testing-Tool
-
-# Create virtual environment
-python3 -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Install dependencies
+git clone https://github.com/Shanmukhasrisai/CyberMobilePenTest.git
+cd CyberMobilePenTest
 pip install -r requirements.txt
-
-# Run initialization
-python mobile_pentest_suite.py --init
+python mobile_pentest_suite.py
 ```
 
-## Quick Start
+## Quick Start Guide
 
 ### Basic Vulnerability Scan
+
 ```bash
-python mobile_pentest_suite.py --target <app-package> --scan-type mobile
+python mobile_pentest_suite.py --target https://api.example.com --scan-type basic
 ```
 
-### API Security Assessment
+### Advanced API Testing
+
 ```bash
-python advanced_mobile_pentest_framework.py --api-url <target-url> --comprehensive
+python mobile_pentest_suite.py --target https://api.example.com \
+  --scan-type advanced \
+  --auth-token YOUR_TOKEN \
+  --output json
 ```
 
-### Generate Compliance Report
+### Dashboard Mode
+
 ```bash
-python mobile_pentest_suite.py --target <app> --report compliance --format pdf
+python dashboard_interface.py --port 5000
 ```
 
-See [USAGE_GUIDE.md](./USAGE_GUIDE.md) for detailed examples and advanced configurations.
+Access the dashboard at: `http://localhost:5000`
 
-## Documentation
+## Configuration
 
-- **[IMPLEMENTATION_GUIDE.md](./IMPLEMENTATION_GUIDE.md)** - Technical implementation and architecture
-- **[API_PENETRATION_TESTING_GUIDE.md](./API_PENETRATION_TESTING_GUIDE.md)** - Comprehensive API testing methodology
-- **[SECURITY_STANDARDS.md](./SECURITY_STANDARDS.md)** - Compliance frameworks and standards alignment
-- **[DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md)** - Production deployment strategies
-- **[CONTRIBUTING.md](./CONTRIBUTING.md)** - Contribution guidelines
+Create a `config.yaml` file in the root directory:
 
-## Architecture Overview
-
-### Module Structure
-```
-Cyber-Architect/
-├── core/
-│   ├── scanner_engine.py
-│   ├── vulnerability_detector.py
-│   └── cve_matcher.py
-├── api/
-│   ├── rest_tester.py
-│   ├── graphql_tester.py
-│   └── auth_tester.py
-├── reporting/
-│   ├── report_generator.py
-│   ├── compliance_mapper.py
-│   └── templates/
-├── integrations/
-│   ├── devsecops_connector.py
-│   ├── slack_notifier.py
-│   └── jira_updater.py
-└── dashboard/
-    ├── web_interface.py
-    └── analytics_engine.py
+```yaml
+scan_settings:
+  max_threads: 10
+  timeout: 30
+  retry_attempts: 3
+  
+security:
+  ssl_verify: true
+  rate_limit: 100
+  
+reporting:
+  format: ["pdf", "json", "html"]
+  output_dir: "./reports"
+  
+compliance:
+  frameworks: ["OWASP", "GDPR", "PCI-DSS"]
 ```
 
-## Security Testing Coverage
+## Usage Examples
 
-### OWASP Mobile Top 10
+### Example 1: Mobile App Security Assessment
+
+```python
+from mobile_pentest_suite import MobilePentestFramework
+
+scanner = MobilePentestFramework(
+    target="https://api.mobileapp.com",
+    scan_level="comprehensive"
+)
+
+results = scanner.run_assessment()
+scanner.generate_report(results, format="pdf")
+```
+
+### Example 2: Automated CVE Detection
+
+```python
+from automated_vulnerability_scanner import CVEScanner
+
+scanner = CVEScanner()
+scanner.load_cve_database("cve_database.json")
+vulnerabilities = scanner.scan_target("https://api.example.com")
+```
+
+### Example 3: API Endpoint Testing
+
+```bash
+python advanced_mobile_pentest_framework.py \
+  --target https://api.example.com/v1 \
+  --test-endpoints \
+  --auth-type bearer \
+  --compliance OWASP
+```
+
+## Architecture
+
+```
+CyberMobilePenTest/
+├── mobile_pentest_suite.py          # Main orchestration framework
+├── automated_vulnerability_scanner.py # Core scanning engine
+├── advanced_mobile_pentest_framework.py # Advanced testing capabilities
+├── dashboard_interface.py           # Web-based dashboard
+├── cve_database.json               # CVE vulnerability database
+├── config.yaml                     # Configuration file
+├── reports/                        # Generated reports
+├── plugins/                        # Custom security plugins
+└── docs/                          # Documentation
+```
+
+## Security Testing Categories
+
+### 1. OWASP Mobile Top 10 Coverage
+
 - M1: Improper Platform Usage
 - M2: Insecure Data Storage
 - M3: Insecure Communication
@@ -136,181 +179,100 @@ Cyber-Architect/
 - M9: Reverse Engineering
 - M10: Extraneous Functionality
 
-### Additional Coverage
-- MAPT (Mobile Application Penetration Testing) Framework
-- API Security Testing (REST, GraphQL, SOAP)
-- Compliance Checks (GDPR, PCI-DSS, ISO 27001)
-- Third-party Component Analysis
-- Supply Chain Risk Assessment
+### 2. API Security Testing
+
+- Authentication bypass
+- Authorization flaws
+- Injection attacks (SQLi, XSS, XXE)
+- Rate limiting
+- API versioning issues
+- Data exposure
+
+### 3. Network Security
+
+- SSL/TLS analysis
+- Certificate validation
+- Man-in-the-middle detection
+- Network traffic analysis
 
 ## Compliance & Standards
 
-### Supported Standards
-- **OWASP**: Mobile Top 10, MAPT Framework, Top 10 API
-- **GDPR**: Privacy and data protection requirements
-- **PCI-DSS**: Payment card data security standards
+- **OWASP MAPT**: Mobile App Penetration Testing framework
+- **GDPR**: Data privacy compliance checks
+- **PCI-DSS**: Payment security standards
 - **ISO 27001**: Information security management
-- **CIS Controls**: Security best practices
-- **NIST Cybersecurity Framework**: Risk assessment and management
-
-## Usage Examples
-
-### Example 1: Comprehensive Mobile Application Assessment
-```bash
-python mobile_pentest_suite.py \
-  --target com.example.app \
-  --scan-type comprehensive \
-  --report-format pdf \
-  --compliance owasp,gdpr,pci-dss \
-  --output ./reports/assessment_2025.pdf
-```
-
-### Example 2: API Security Testing with Compliance Check
-```bash
-python advanced_mobile_pentest_framework.py \
-  --api-url https://api.example.com \
-  --auth-token <token> \
-  --compliance-profile enterprise \
-  --generate-remediation true
-```
-
-### Example 3: DevSecOps Pipeline Integration
-```bash
-python mobile_pentest_suite.py \
-  --target <app> \
-  --ci-mode true \
-  --fail-on-severity high \
-  --output-format json \
-  --webhook-url https://ci-system.local/webhook
-```
-
-See [USAGE_GUIDE.md](./USAGE_GUIDE.md) for additional examples.
-
-## DevSecOps Integration
-
-### CI/CD Pipeline Support
-- **GitLab CI**: Native integration with `.gitlab-ci.yml`
-- **GitHub Actions**: Ready-to-use workflow templates
-- **Jenkins**: Plugin support for pipeline integration
-- **Azure DevOps**: Task integration available
-
-### Example GitHub Actions Workflow
-```yaml
-name: Mobile Security Scan
-on: [push, pull_request]
-jobs:
-  security-scan:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Run Cyber-Architect Scan
-        run: |
-          docker run cyber-architect:latest \
-            --target ./app.apk \
-            --ci-mode true \
-            --fail-on-severity high
-```
+- **NIST**: Cybersecurity framework alignment
 
 ## Reporting Features
 
-### Report Types
-- **Executive Summary**: High-level findings and risk metrics
-- **Detailed Technical Report**: Complete vulnerability assessment
-- **Compliance Report**: Standards alignment and gaps
-- **Remediation Roadmap**: Prioritized fix recommendations
-- **Risk Dashboard**: Visual analytics and metrics
+### Report Formats
 
-### Export Formats
-- PDF (with branding)
-- HTML (interactive)
-- JSON (machine-readable)
-- SARIF (for integration)
-- CSV (for spreadsheet analysis)
+- **PDF**: Executive summaries with risk ratings
+- **HTML**: Interactive web-based reports
+- **JSON**: Machine-readable for CI/CD integration
+- **XML**: OWASP standard format
 
-## Extensibility
+### Report Contents
 
-### Plugin Architecture
-Create custom security tests by extending the base plugin interface:
+- Executive summary
+- Vulnerability details with CVSS scores
+- Proof-of-concept exploits
+- Remediation recommendations
+- Compliance gap analysis
+- Risk prioritization matrix
+
+## CI/CD Integration
+
+### Jenkins Pipeline Example
+
+```groovy
+stage('Security Testing') {
+    steps {
+        sh 'python mobile_pentest_suite.py --target ${API_ENDPOINT} --output json'
+        archiveArtifacts 'reports/*.json'
+    }
+}
+```
+
+### GitLab CI Example
+
+```yaml
+security_scan:
+  stage: test
+  script:
+    - python mobile_pentest_suite.py --target $API_ENDPOINT
+  artifacts:
+    reports:
+      security: reports/security-report.json
+```
+
+## Advanced Features
+
+### Custom Plugin Development
 
 ```python
-from core.plugin_base import SecurityPlugin
+from plugins.base import SecurityPlugin
 
 class CustomSecurityTest(SecurityPlugin):
-    metadata = {
-        'name': 'Custom Test',
-        'version': '1.0.0',
-        'standards': ['owasp', 'custom']
-    }
-    
-    def execute(self, target):
-        # Implementation
-        pass
+    def run_test(self, target):
+        # Your custom security logic
+        return test_results
 ```
 
-### Integration Points
-- Webhook notifications
-- REST API for external tools
-- Custom report templates
-- External vulnerability databases
+### API Integration
 
-## Performance & Scalability
+```python
+import requests
 
-- **Concurrent Testing**: Multi-threaded scanning with configurable workers
-- **Distributed Scanning**: Support for distributed test execution
-- **Caching Layer**: Redis-backed caching for performance optimization
-- **Database Optimization**: Indexed queries for large datasets
-- **Load Balancing**: Ready for load-balanced deployment
-
-## Best Practices
-
-### Security Testing Methodology
-1. **Reconnaissance**: Gather application information
-2. **Vulnerability Scanning**: Automated detection
-3. **Manual Testing**: In-depth security analysis
-4. **Exploitation**: Proof of concept development
-5. **Remediation**: Fix validation and verification
-6. **Reporting**: Comprehensive documentation
-
-### Deployment Best Practices
-- Use isolated test environments
-- Implement proper access controls
-- Enable audit logging
-- Use encrypted communications
-- Regular updates and patching
-- Secure credential management
-
-## Troubleshooting
-
-### Common Issues
-
-**Issue**: Scan fails to start
-```bash
-# Check logs
-tail -f logs/cyber-architect.log
-
-# Verify dependencies
-pip check
-
-# Re-initialize
-python mobile_pentest_suite.py --init --force
+response = requests.post(
+    'http://localhost:5000/api/scan',
+    json={'target': 'https://api.example.com'}
+)
 ```
 
-**Issue**: API tests return timeout errors
-```bash
-# Increase timeout
-python advanced_mobile_pentest_framework.py --timeout 60
+## Performance Metrics
 
-# Check connectivity
-curl -v https://api.example.com
-```
-
-See [TROUBLESHOOTING.md](./TROUBLESHOOTING.md) for more solutions.
-
-## Performance Benchmarks
-
-- Average scan time: 5-15 minutes (varies by app complexity)
-- Memory usage: 512MB - 2GB
-- Database overhead: 50-100MB
+- Scan completion time: < 10 minutes for standard apps
 - Report generation: < 2 minutes
 - API testing throughput: 100+ requests/second
 
@@ -319,9 +281,10 @@ See [TROUBLESHOOTING.md](./TROUBLESHOOTING.md) for more solutions.
 We welcome contributions from security researchers and developers. Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
 
 ### Development Setup
+
 ```bash
-git clone https://github.com/Shanmukhasrisai/Cyber-Architect-Mobile-Penetration-Testing-Tool.git
-cd Cyber-Architect-Mobile-Penetration-Testing-Tool
+git clone https://github.com/Shanmukhasrisai/CyberMobilePenTest.git
+cd CyberMobilePenTest
 pip install -r requirements-dev.txt
 python -m pytest tests/
 ```
@@ -332,9 +295,9 @@ This project is licensed under the MIT License - see [LICENSE](./LICENSE) file f
 
 ## Support & Contact
 
-- **Issues**: [GitHub Issues](https://github.com/Shanmukhasrisai/Cyber-Architect-Mobile-Penetration-Testing-Tool/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/Shanmukhasrisai/Cyber-Architect-Mobile-Penetration-Testing-Tool/discussions)
-- **Email**: security@cyber-architect.dev
+- **Issues**: [GitHub Issues](https://github.com/Shanmukhasrisai/CyberMobilePenTest/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/Shanmukhasrisai/CyberMobilePenTest/discussions)
+- **Email**: security@cybermobilepentest.dev
 - **Documentation**: [Full Documentation](./docs/)
 
 ## Disclaimer
