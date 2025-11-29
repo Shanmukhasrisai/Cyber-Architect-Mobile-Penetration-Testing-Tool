@@ -1,6 +1,7 @@
-# Cyber-Architect Usage Guide
+# CyberMobilePenTest Usage Guide
 
 ## Table of Contents
+
 1. [Installation](#installation)
 2. [Basic Usage](#basic-usage)
 3. [Advanced Scanning](#advanced-scanning)
@@ -13,6 +14,7 @@
 ## Installation
 
 ### Prerequisites
+
 - Python 3.8 or higher
 - pip package manager
 - Virtual environment support
@@ -21,12 +23,12 @@
 
 ```bash
 # Clone the repository
-git clone https://github.com/Shanmukhasrisai/Cyber-Architect-Mobile-Penetration-Testing-Tool.git
-cd Cyber-Architect-Mobile-Penetration-Testing-Tool
+git clone https://github.com/Shanmukhasrisai/CyberMobilePenTest.git
+cd CyberMobilePenTest
 
 # Create virtual environment
-python3 -m venv ca-env
-source ca-env/bin/activate  # On Windows: ca-env\Scripts\activate
+python3 -m venv cmp-env
+source cmp-env/bin/activate  # On Windows: cmp-env\Scripts\activate
 
 # Install dependencies
 pip install -r requirements.txt
@@ -46,431 +48,319 @@ python mobile_pentest_suite.py --target com.example.app --scan-type quick
 ```
 
 **Options:**
+
 - `--target`: Application package name or path to APK/IPA
 - `--scan-type`: `quick`, `standard`, or `comprehensive`
-- `--platform`: `android`, `ios`, or `auto` (default)
 
-### 2. Standard Security Assessment
+### 2. Basic API Test
+
+Test a mobile application API endpoint:
 
 ```bash
-python mobile_pentest_suite.py \
-  --target com.example.app \
-  --scan-type standard \
-  --output-format json \
-  --report-file assessment_2025.json
+python mobile_pentest_suite.py --api-target https://api.example.com --test-endpoints
 ```
 
-### 3. Comprehensive Penetration Test
+### 3. Generate a Quick Report
+
+Create a security report after a scan:
 
 ```bash
-python mobile_pentest_suite.py \
-  --target com.example.app \
-  --scan-type comprehensive \
-  --deep-analysis true \
-  --timeout 600 \
-  --output-dir ./reports/
+python mobile_pentest_suite.py --target com.example.app --report pdf
 ```
 
 ## Advanced Scanning
 
-### Custom Vulnerability Scanning
+### Run Comprehensive Scan
 
-```python
-from automated_vulnerability_scanner import VulnerabilityScanner
-
-scanner = VulnerabilityScanner()
-results = scanner.scan(
-    target='com.example.app',
-    plugins=['authentication', 'cryptography', 'storage'],
-    severity_threshold='medium'
-)
-
-for vulnerability in results.vulnerabilities:
-    print(f"{vulnerability.type}: {vulnerability.severity}")
-```
-
-### Targeted Testing Modules
-
-#### Storage Vulnerability Testing
 ```bash
 python advanced_mobile_pentest_framework.py \
   --target com.example.app \
-  --module storage \
-  --check-sqlite true \
-  --check-preferences true \
-  --check-files true
+  --scan-level comprehensive \
+  --enable-sast \
+  --enable-dast \
+  --enable-api-testing
 ```
 
-#### Communication Security Testing
+### Specify Compliance Frameworks
+
 ```bash
-python advanced_mobile_pentest_framework.py \
+python mobile_pentest_suite.py \
   --target com.example.app \
-  --module communication \
-  --intercept-ssl true \
-  --check-certificates true \
-  --validate-tls-version true
+  --compliance "OWASP,GDPR,PCI-DSS"
 ```
 
-#### Cryptography Analysis
+### Use Custom Configuration
+
 ```bash
-python advanced_mobile_pentest_framework.py \
+python mobile_pentest_suite.py \
   --target com.example.app \
-  --module cryptography \
-  --check-algorithms true \
-  --validate-key-strength true \
-  --detect-hardcoded-keys true
+  --config custom_config.yaml
 ```
 
 ## API Testing
 
-### Basic API Security Assessment
+### Test REST API Endpoints
+
+```bash
+python mobile_pentest_suite.py \
+  --api-target https://api.example.com \
+  --auth-token YOUR_BEARER_TOKEN \
+  --test-endpoints \
+  --output json
+```
+
+### Advanced API Testing with Custom Headers
 
 ```bash
 python advanced_mobile_pentest_framework.py \
-  --api-url https://api.example.com \
-  --api-type rest \
-  --basic-auth username:password
+  --api-target https://api.example.com \
+  --headers "Authorization: Bearer TOKEN" \
+  --test-injection-attacks \
+  --test-rate-limiting
 ```
 
-### Advanced API Testing
+### Test GraphQL Endpoints
 
 ```bash
-python advanced_mobile_pentest_framework.py \
-  --api-url https://api.example.com \
-  --api-type rest \
-  --bearer-token <token> \
-  --test-authentication true \
-  --test-authorization true \
-  --test-rate-limiting true \
-  --test-injection true \
-  --fuzz-parameters true
-```
-
-### GraphQL API Testing
-
-```bash
-python advanced_mobile_pentest_framework.py \
-  --api-url https://api.example.com/graphql \
-  --api-type graphql \
-  --introspection-check true \
-  --query-complexity-check true \
-  --depth-limiting-check true
-```
-
-### Testing Specific Endpoints
-
-```bash
-python advanced_mobile_pentest_framework.py \
-  --api-url https://api.example.com \
-  --endpoints-file endpoints.json \
-  --test-timeout 30 \
-  --parallel-requests 10
-```
-
-**Sample endpoints.json:**
-```json
-{
-  "endpoints": [
-    {
-      "method": "GET",
-      "path": "/api/v1/users",
-      "auth_required": true
-    },
-    {
-      "method": "POST",
-      "path": "/api/v1/users",
-      "auth_required": false,
-      "sensitive": true
-    }
-  ]
-}
+python mobile_pentest_suite.py \
+  --graphql-endpoint https://api.example.com/graphql \
+  --introspection-test \
+  --query-test
 ```
 
 ## Reporting
 
-### Generate Standard Report
+### Generate PDF Report
 
 ```bash
 python mobile_pentest_suite.py \
   --target com.example.app \
-  --report-format pdf \
-  --output-file assessment_report.pdf
+  --report pdf \
+  --output-dir ./reports
 ```
 
-### Generate Executive Summary
+### Generate HTML Report
 
 ```bash
 python mobile_pentest_suite.py \
   --target com.example.app \
-  --report-type executive \
-  --output-format html \
-  --branding-logo ./logo.png
+  --report html \
+  --output-dir ./reports
 ```
 
-### Generate Technical Report with Remediation
+### Export JSON for CI/CD Integration
 
 ```bash
 python mobile_pentest_suite.py \
   --target com.example.app \
-  --report-type technical \
-  --include-remediation true \
-  --remediation-priority true \
-  --output-format pdf
-```
-
-### Multiple Format Export
-
-```bash
-python mobile_pentest_suite.py \
-  --target com.example.app \
-  --export-formats pdf,html,json,csv \
-  --output-dir ./reports/
-```
-
-### Webhook Notification
-
-```bash
-python mobile_pentest_suite.py \
-  --target com.example.app \
-  --webhook-url https://slack.example.com/webhook \
-  --webhook-format slack \
-  --notify-on-completion true
+  --output json \
+  --output-file scan_results.json
 ```
 
 ## Compliance Testing
 
-### OWASP Mobile Top 10 Compliance
+### OWASP Mobile Top 10 Compliance Check
 
 ```bash
 python mobile_pentest_suite.py \
   --target com.example.app \
-  --compliance-framework owasp-mobile \
-  --report-format pdf \
-  --output-file owasp_assessment.pdf
+  --compliance OWASP_MOBILE_TOP_10
 ```
 
-### GDPR Compliance Check
+### GDPR Compliance Assessment
 
 ```bash
 python mobile_pentest_suite.py \
   --target com.example.app \
-  --compliance-framework gdpr \
-  --check-data-protection true \
-  --check-consent-management true \
-  --check-privacy-controls true
+  --compliance GDPR \
+  --privacy-check
 ```
 
-### PCI-DSS Compliance Assessment
+### PCI-DSS Compliance Validation
 
 ```bash
 python mobile_pentest_suite.py \
   --target com.example.app \
-  --compliance-framework pci-dss \
-  --check-payment-security true \
-  --check-encryption true \
-  --check-access-controls true
-```
-
-### Multi-Framework Compliance Report
-
-```bash
-python mobile_pentest_suite.py \
-  --target com.example.app \
-  --compliance-frameworks owasp-mobile,gdpr,pci-dss,iso-27001 \
-  --generate-gap-analysis true \
-  --output-format html
+  --compliance PCI_DSS \
+  --payment-check
 ```
 
 ## DevSecOps Integration
 
-### CI/CD Pipeline Integration
+### Jenkins Pipeline Integration
 
-#### GitHub Actions
+```bash
+#!/bin/bash
+# Run CyberMobilePenTest in CI pipeline
+python mobile_pentest_suite.py \
+  --target $APP_PACKAGE_NAME \
+  --output json \
+  --output-file results.json
+
+# Check results and fail if critical vulnerabilities found
+python -c "import json; results=json.load(open('results.json')); \
+  exit(1 if any(v['severity']=='critical' for v in results['vulnerabilities']) else 0)"
+```
+
+### GitHub Actions Integration
 
 ```yaml
-name: Mobile Security Scan
+name: Security Scan
+
 on: [push, pull_request]
 
 jobs:
   security-scan:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      
-      - name: Run Cyber-Architect Scan
+      - uses: actions/checkout@v2
+      - name: Run CyberMobilePenTest
         run: |
           python mobile_pentest_suite.py \
-            --target ./app.apk \
-            --ci-mode true \
-            --fail-on-severity critical \
-            --output-format sarif \
-            --output-file results.sarif
-      
-      - name: Upload SARIF Report
-        uses: github/codeql-action/upload-sarif@v2
+            --target com.example.app \
+            --output json \
+            --output-file results.json
+      - name: Upload results
+        uses: actions/upload-artifact@v2
         with:
-          sarif_file: results.sarif
+          name: security-reports
+          path: results.json
 ```
 
-#### GitLab CI
+### GitLab CI Integration
 
 ```yaml
-mobile-security-scan:
-  image: python:3.9
+security_scan:
+  stage: test
   script:
-    - pip install -r requirements.txt
-    - python mobile_pentest_suite.py \
-        --target $CI_PROJECT_DIR/app.apk \
-        --ci-mode true \
-        --fail-on-severity high \
-        --output-format json \
-        --output-file scan_results.json
+    - python mobile_pentest_suite.py --target $APP_NAME --output json
   artifacts:
     reports:
-      dependency_scanning: scan_results.json
+      security: scan_results.json
 ```
 
-#### Jenkins
+## Dashboard Interface
 
-```groovy
-stage('Security Scan') {
-    steps {
-        sh '''
-            python mobile_pentest_suite.py \
-              --target ./app.apk \
-              --ci-mode true \
-              --fail-on-severity high \
-              --output-format json \
-              --output-file ${WORKSPACE}/scan_results.json
-        '''
-    }
-    post {
-        always {
-            publishHTML([
-                reportDir: './',
-                reportFiles: 'scan_results.json',
-                reportName: 'Security Scan Report'
-            ])
-        }
-    }
-}
+### Launch Web Dashboard
+
+```bash
+python dashboard_interface.py --port 5000
 ```
 
-### SAST Integration
+Access the dashboard at: `http://localhost:5000`
+
+### Dashboard Features
+
+- Real-time scan monitoring
+- Vulnerability analytics
+- Compliance status overview
+- Historical trend analysis
+- Custom report generation
+
+## Logging and Debugging
+
+### Check Scan Logs
+
+```bash
+tail -f logs/cybermobilepentest.log
+```
+
+### Enable Debug Mode
 
 ```bash
 python mobile_pentest_suite.py \
   --target com.example.app \
-  --ci-mode true \
-  --fail-on-severity high,critical \
-  --output-format sarif,json \
-  --report-file scan_results
+  --debug \
+  --log-level DEBUG
+```
+
+### View Application Logs
+
+```bash
+cat logs/cybermobilepentest.log | grep ERROR
 ```
 
 ## Troubleshooting
 
-### Issue: Connection Timeout
+### Issue: Module not found error
 
-**Problem**: Scan fails with connection timeout error.
+**Solution:**
 
-**Solution**:
 ```bash
+# Ensure you're in the correct virtual environment
+source cmp-env/bin/activate
+
+# Reinstall dependencies
+pip install -r requirements.txt
+```
+
+### Issue: Permission denied error
+
+**Solution:**
+
+```bash
+# Grant execute permissions
+chmod +x mobile_pentest_suite.py
+chmod +x advanced_mobile_pentest_framework.py
+```
+
+### Issue: Port already in use (for dashboard)
+
+**Solution:**
+
+```bash
+# Use a different port
+python dashboard_interface.py --port 5001
+```
+
+### Issue: API authentication fails
+
+**Solution:**
+
+```bash
+# Verify your authentication token
+python mobile_pentest_suite.py \
+  --api-target https://api.example.com \
+  --auth-type bearer \
+  --auth-token YOUR_TOKEN \
+  --verify-auth
+```
+
+### Issue: Scan timeout
+
+**Solution:**
+
+```bash
+# Increase timeout and adjust scan parameters
 python mobile_pentest_suite.py \
   --target com.example.app \
-  --timeout 120 \
-  --retry-count 3
+  --timeout 300 \
+  --scan-type quick
 ```
 
-### Issue: Permission Denied
-
-**Problem**: "Permission denied" error during scan.
-
-**Solution**:
-```bash
-# On Linux/macOS
-sudo chmod +x mobile_pentest_suite.py
-
-# Or run with proper permissions
-python mobile_pentest_suite.py --target com.example.app
-```
-
-### Issue: Memory Issues
-
-**Problem**: "Out of memory" errors during comprehensive scans.
-
-**Solution**:
-```bash
-# Increase available memory
-export PYTHONHASHSEED=0
-python -X dev mobile_pentest_suite.py \
-  --target com.example.app \
-  --memory-limit 4096
-```
-
-### Issue: API Connection Failed
-
-**Problem**: Cannot connect to API endpoint.
-
-**Solution**:
-```bash
-# Verify connectivity
-curl -v https://api.example.com/health
-
-# Run scan with verbose logging
-python advanced_mobile_pentest_framework.py \
-  --api-url https://api.example.com \
-  --verbose true \
-  --debug true
-```
-
-### Viewing Logs
+## Common Commands
 
 ```bash
-# Real-time log viewing
-tail -f logs/cyber-architect.log
+# List available scan types
+python mobile_pentest_suite.py --help
 
-# Search for errors
-grep ERROR logs/cyber-architect.log
+# Run scan and save results
+python mobile_pentest_suite.py --target com.example.app --output json
 
-# Export logs for analysis
-cp logs/cyber-architect.log scan_logs_backup.log
+# View scan results
+cat results.json | jq
+
+# Generate multiple report formats
+python mobile_pentest_suite.py --target com.example.app --report pdf,html,json
 ```
 
-## Best Practices
+## Getting Help
 
-1. **Always use isolated test environments** - Never scan production systems without authorization
-2. **Maintain updated CVE database** - Run `--update-cve-db` regularly
-3. **Document scan parameters** - Keep records of test configurations
-4. **Review reports carefully** - Validate findings before remediation
-5. **Test remediation** - Verify fixes don't introduce new issues
-6. **Schedule regular assessments** - Conduct periodic security reviews
-7. **Secure credentials** - Use environment variables or credential managers
-
-## Performance Optimization
-
-### Parallel Scanning
-```bash
-python mobile_pentest_suite.py \
-  --target com.example.app \
-  --parallel-workers 4 \
-  --scan-type comprehensive
-```
-
-### Cache Management
-```bash
-# Clear cache
-python mobile_pentest_suite.py --clear-cache
-
-# Disable caching
-python mobile_pentest_suite.py --cache-disabled true
-```
-
-## Support & Resources
-
-- **Documentation**: [Full Docs](https://github.com/Shanmukhasrisai/Cyber-Architect-Mobile-Penetration-Testing-Tool/wiki)
-- **Issues**: [Report Problems](https://github.com/Shanmukhasrisai/Cyber-Architect-Mobile-Penetration-Testing-Tool/issues)
-- **Security**: [Report Vulnerabilities](./SECURITY.md)
+- **Documentation:** [CyberMobilePenTest Docs](./docs/)
+- **Issues:** [GitHub Issues](https://github.com/Shanmukhasrisai/CyberMobilePenTest/issues)
+- **Discussions:** [GitHub Discussions](https://github.com/Shanmukhasrisai/CyberMobilePenTest/discussions)
+- **Email:** security@cybermobilepentest.dev
 
 ---
 
-For additional support and examples, visit the [GitHub Wiki](https://github.com/Shanmukhasrisai/Cyber-Architect-Mobile-Penetration-Testing-Tool/wiki).
+**CyberMobilePenTest** - Enterprise Mobile Penetration Testing Suite
