@@ -33,38 +33,35 @@ This tool is built for scalability, modularity, and integration into modern DevS
 - pip (Python package manager)
 - Git
 - 4GB RAM minimum (8GB recommended)
-- Network connectivity for CVE database updates
-
-### Supported Platforms
-
-- Linux (Ubuntu 20.04+, Debian 10+, RHEL 8+)
-- macOS 10.15+
-- Windows 10+ (with WSL2 recommended)
+- 2GB free disk space
+- Internet connection for CVE database updates
 
 ## Installation
 
-### Quick Install
+### Quick Installation
 
 ```bash
 # Clone the repository
 git clone https://github.com/Shanmukhasrisai/CyberMobilePenTest.git
+
+# Navigate to the project directory
 cd CyberMobilePenTest
 
 # Install dependencies
 pip install -r requirements.txt
 
-# Run setup
-python setup.py install
+# Verify installation
+python cyber_mobile_pentest.py --version
 ```
 
-### Docker Installation
+### Docker Installation (Recommended for Production)
 
 ```bash
-# Build Docker image
-docker build -t cybermobilepentest .
+# Pull the Docker image
+docker pull shanmukhasrisai/cybermobilepentest:latest
 
-# Run container
-docker run -it cybermobilepentest
+# Run the container
+docker run -v $(pwd)/reports:/app/reports shanmukhasrisai/cybermobilepentest:latest
 ```
 
 ## Quick Start
@@ -72,59 +69,192 @@ docker run -it cybermobilepentest
 ### Basic Scan
 
 ```bash
-# Run a basic vulnerability scan
-python cybermobile.py scan --target <APK_PATH>
-
-# Example
-python cybermobile.py scan --target ./myapp.apk
+python cyber_mobile_pentest.py --scan --target your_app.apk
 ```
 
-### API Testing
+### API Security Testing
 
 ```bash
-# Test API endpoints
-python cybermobile.py api-test --url https://api.example.com --config api-config.json
+python cyber_mobile_pentest.py --api-test --url https://api.example.com --endpoints config/endpoints.json
 ```
 
 ### Generate Report
 
 ```bash
-# Generate detailed security report
-python cybermobile.py report --scan-id <SCAN_ID> --format pdf
+python cyber_mobile_pentest.py --report --format pdf --output-dir ./reports
 ```
 
-### Advanced Usage
+### Accessing and Downloading Reports
 
+After running scans, CyberMobilePenTest automatically generates comprehensive security reports that can be accessed and downloaded in multiple ways:
+
+#### Report Locations
+
+**Default Location**: All reports are saved to the `./reports` directory in your project root by default.
+
+**Custom Location**: Specify a custom output directory using the `--output-dir` flag:
 ```bash
-# Run with custom plugins
-python cybermobile.py scan --target ./app.apk --plugins custom_plugin.py
-
-# Compliance-specific scan
-python cybermobile.py scan --target ./app.apk --compliance owasp,gdpr
-
-# CI/CD integration mode
-python cybermobile.py scan --target ./app.apk --ci-mode --fail-on high
+python cyber_mobile_pentest.py --report --format pdf --output-dir /path/to/custom/reports
 ```
+
+#### Report Formats and File Names
+
+Reports are generated in your chosen format with timestamped filenames for easy identification:
+
+- **PDF Reports**: `scan_report_YYYY-MM-DD_HH-MM-SS.pdf`
+- **HTML Reports**: `scan_report_YYYY-MM-DD_HH-MM-SS.html`
+- **JSON Reports**: `scan_report_YYYY-MM-DD_HH-MM-SS.json`
+- **XML Reports**: `scan_report_YYYY-MM-DD_HH-MM-SS.xml`
+
+#### How to Download Reports
+
+**Local Installation**:
+1. Navigate to the reports directory: `cd reports`
+2. List available reports: `ls -la`
+3. Copy or move reports to your desired location: `cp scan_report_*.pdf ~/Documents/`
+
+**Docker Installation**:
+Reports are automatically mounted to your host machine via volume mapping:
+```bash
+# Reports are available in the current directory's reports folder
+ls -la ./reports/
+```
+
+**CI/CD Pipeline Integration**:
+Use the `--output-dir` flag to specify your CI/CD artifact directory:
+```bash
+python cyber_mobile_pentest.py --report --format pdf --output-dir $CI_ARTIFACTS_DIR
+```
+
+#### Report Contents
+
+Each report includes:
+- Executive summary with risk ratings
+- Detailed vulnerability findings with CVE mappings
+- OWASP Mobile Top 10 compliance matrix
+- Remediation recommendations
+- Technical details and proof of concepts
+- Compliance framework mappings (GDPR, PCI-DSS, ISO 27001)
+
+#### Accessing Reports Programmatically
+
+You can also access report data programmatically using the API:
+
+```python
+from cyber_mobile_pentest import ReportManager
+
+# Initialize report manager
+report_mgr = ReportManager()
+
+# List all available reports
+reports = report_mgr.list_reports('./reports')
+
+# Load a specific report
+report_data = report_mgr.load_report('scan_report_2025-11-30_14-30-00.json')
+
+# Export to different format
+report_mgr.export(report_data, format='pdf', output='custom_report.pdf')
+```
+
+#### Report Retention and Management
+
+- Reports are stored indefinitely unless manually deleted
+- Implement automated cleanup for old reports:
+  ```bash
+  # Delete reports older than 30 days
+  find ./reports -name "scan_report_*.pdf" -mtime +30 -delete
+  ```
+- Archive important reports to a secure location
+- Use version control for report tracking in enterprise environments
 
 ## Configuration
 
-Create a `config.yaml` file to customize scan parameters:
+### Configuration File
+
+Create a `config.yaml` file in the project root:
 
 ```yaml
-scan:
-  depth: comprehensive
+scan_settings:
+  depth: deep
   timeout: 300
-  max_threads: 4
-
+  threads: 4
+  
 reporting:
-  format: [pdf, json, html]
+  default_format: pdf
+  output_directory: ./reports
   include_screenshots: true
   
-compliance:
-  frameworks: [owasp, gdpr, pci-dss]
+api_testing:
+  rate_limit: 10
+  authentication:
+    type: bearer
+    token_file: ./tokens/api_token.txt
 ```
 
-## Security Disclaimer
+## Advanced Usage
+
+### Custom Security Tests
+
+```python
+from cyber_mobile_pentest.plugins import SecurityTestPlugin
+
+class CustomTest(SecurityTestPlugin):
+    def run(self, target):
+        # Your custom test logic
+        pass
+```
+
+### Integration with CI/CD
+
+#### GitHub Actions Example
+
+```yaml
+name: Mobile Security Scan
+on: [push]
+jobs:
+  security-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run CyberMobilePenTest
+        run: |
+          python cyber_mobile_pentest.py --scan --target app.apk
+          python cyber_mobile_pentest.py --report --format json
+```
+
+## Compliance and Standards
+
+### Supported Frameworks
+
+- **OWASP Mobile Top 10**: Complete coverage of mobile security risks
+- **MASVS**: Mobile Application Security Verification Standard
+- **GDPR**: Data protection and privacy compliance checks
+- **PCI-DSS**: Payment card industry security requirements
+- **ISO 27001**: Information security management
+
+## Troubleshooting
+
+### Common Issues
+
+**Issue**: Module not found error
+```bash
+# Solution: Reinstall dependencies
+pip install -r requirements.txt --force-reinstall
+```
+
+**Issue**: Permission denied on report generation
+```bash
+# Solution: Check directory permissions
+chmod 755 ./reports
+```
+
+## Roadmap
+
+- [ ] Machine learning-based vulnerability prediction
+- [ ] Cloud platform integration (AWS, Azure, GCP)
+- [ ] Real-time collaborative testing dashboard
+- [ ] Mobile device farm integration
+- [ ] Enhanced SAST/DAST capabilities
 
 ⚠️ **IMPORTANT**: This tool is intended for authorized security testing only.
 
