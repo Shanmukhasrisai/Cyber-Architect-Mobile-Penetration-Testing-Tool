@@ -1,16 +1,32 @@
 name: Docker Image CI
+
 on:
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+
 permissions:
   contents: read
+
 jobs:
   build:
     runs-on: ubuntu-latest
+    
     steps:
     - uses: actions/checkout@v4
-    - name: Build the Docker image
+    
+    - name: Check if Dockerfile exists
+      id: dockerfile-check
       run: |
-        docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+        if [ -f "Dockerfile" ]; then
+          echo "exists=true" >> $GITHUB_OUTPUT
+        else
+          echo "exists=false" >> $GITHUB_OUTPUT
+          echo "::warning::Dockerfile not found in repository"
+        fi
+    
+    - name: Build the Docker image
+      if: steps.dockerfile-check.outputs.exists == 'true'
+      run: |
+        docker build . --file Dockerfile --tag cybermobilepentest:$(date +%s)
