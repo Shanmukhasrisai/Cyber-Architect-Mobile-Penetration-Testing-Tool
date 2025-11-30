@@ -51,11 +51,12 @@ jobs:
               '*.pyc',
               '*.pyo',
               '*.pyd',
-              '.DS_Store'
+              '.DS_Store',
+              'Thumbs.db'
           }
           
           def should_ignore(path):
-              """Check if path should be ignored"""
+              """Check if path should be ignored based on patterns."""
               path_str = str(path)
               for pattern in IGNORE_PATTERNS:
                   if pattern in path_str:
@@ -63,7 +64,7 @@ jobs:
               return False
           
           def check_file_sizes(root_path):
-              """Check all file sizes in the repository"""
+              """Check all file sizes in the repository."""
               total_size = 0
               large_files = []
               
@@ -116,3 +117,4 @@ jobs:
             **/*.log
             **/validation-*.txt
           retention-days: 7
+          if-no-files-found: ignore
