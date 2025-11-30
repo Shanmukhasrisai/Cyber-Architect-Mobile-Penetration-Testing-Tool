@@ -83,7 +83,7 @@ jobs:
     
     - name: Upload pip install log
       if: always()
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: pip-install-log
         path: pip-install.log
