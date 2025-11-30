@@ -48,7 +48,7 @@ This project is licensed under the MIT License - see [LICENSE](./LICENSE) file f
 
 - **Issues**: [GitHub Issues](https://github.com/Shanmukhasrisai/CyberMobilePenTest/issues)
 - **Discussions**: [GitHub Discussions](https://github.com/Shanmukhasrisai/CyberMobilePenTest/discussions)
-- **Email**: cyberboy25@gmail.com
+- **Email**: cyberboy25plus@gmail.com
 - **Documentation**: [Full Documentation](./docs/)
 
 ## Disclaimer
