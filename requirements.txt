@@ -1,201 +1,29 @@
 # CyberMobilePenTest - Requirements File
 # Python dependencies for mobile penetration testing framework
 # Last updated: 2025-11-30
-
 # ============================================
 # Core Framework Dependencies
 # ============================================
-
 # Network and HTTP Libraries
 requests>=2.31.0
 urllib3>=2.1.0
 httpx>=0.25.0
 aiohttp>=3.9.0
-
 # Security and Cryptography
 cryptography>=41.0.7
 pycryptodome>=3.19.0
 paramiko>=3.4.0
-
 # Mobile Testing Tools
 frida>=16.1.8
 frida-tools>=12.2.2
 objection>=1.11.0
-
 # Android/APK Analysis
 androguard>=3.4.0
 apkid>=2.1.5
-
 # iOS Analysis
-pyiOSBackup>=0.9.920
-
+pyiOSBackup>=0.2.0
 # Static Analysis
 bandit>=1.7.5
 safety>=2.3.5
 flake8>=6.1.0
 pylint>=3.0.3
-mypy>=1.7.1
-
-# Dynamic Analysis and Fuzzing
-boofuzz>=0.4.1
-scapy>=2.5.0
-
-# ============================================
-# Data Processing and Analysis
-# ============================================
-
-pandas>=2.1.4
-numpy>=1.26.2
-
-# JSON/XML Processing
-jsonschema>=4.20.0
-lxml>=4.9.4
-pyyaml>=6.0.1
-
-# ============================================
-# Web Interface and Visualization
-# ============================================
-
-flask>=3.0.0
-flask-cors>=4.0.0
-jinja2>=3.1.2
-
-# Dashboard and Reporting
-dash>=2.14.2
-plotly>=5.18.0
-markdown>=3.5.1
-
-# ============================================
-# Database and Caching
-# ============================================
-
-sqlalchemy>=2.0.23
-redis>=5.0.1
-
-# ============================================
-# Testing and Quality Assurance
-# ============================================
-
-pytest>=7.4.3
-pytest-cov>=4.1.0
-pytest-asyncio>=0.21.1
-pytest-mock>=3.12.0
-coverage>=7.3.3
-
-# Test Fixtures and Mocking
-faker>=20.1.0
-factory-boy>=3.3.0
-responses>=0.24.1
-
-# ============================================
-# CLI and User Interface
-# ============================================
-
-click>=8.1.7
-colorama>=0.4.6
-rich>=13.7.0
-tabulate>=0.9.0
-tqdm>=4.66.1
-
-# ============================================
-# Logging and Monitoring
-# ============================================
-
-loguru>=0.7.2
-python-json-logger>=2.0.7
-
-# ============================================
-# Utilities
-# ============================================
-
-python-dotenv>=1.0.0
-python-dateutil>=2.8.2
-pytz>=2023.3
-humanize>=4.9.0
-validators>=0.22.0
-
-# File handling
-pathlib2>=2.3.7
-watchdog>=3.0.0
-
-# Compression
-py7zr>=0.20.8
-
-# ============================================
-# DevOps and Deployment
-# ============================================
-
-gunicorn>=21.2.0
-uwsgi>=2.0.23
-
-# Container support
-docker>=7.0.0
-
-# ============================================
-# Code Quality and Formatting
-# ============================================
-
-black>=23.12.0
-isort>=5.13.2
-autopep8>=2.0.4
-
-# ============================================
-# Documentation
-# ============================================
-
-sphinx>=7.2.6
-sphinx-rtd-theme>=2.0.0
-
-# ============================================
-# Security Scanning (Development)
-# ============================================
-
-pip-audit>=2.6.1
-
-# ============================================
-# Mobile-Specific Libraries
-# ============================================
-
-# SSL/TLS Analysis
-sslyze>=5.2.0
-
-# Certificate Management
-certifi>=2023.11.17
-
-# Proxy and Interception
-mitmproxy>=10.1.5
-
-# ============================================
-# API Testing
-# ============================================
-
-postman-sdk>=0.1.9
-
-# ============================================
-# Machine Learning (for advanced analysis)
-# ============================================
-
-scikit-learn>=1.3.2
-
-# ============================================
-# Notes:
-# ============================================
-# - Pin versions to ensure reproducible builds
-# - Use virtual environments (venv) for isolation
-# - Run 'pip install -r requirements.txt' to install
-# - For development: pip install -r requirements.txt -r requirements-dev.txt
-# - Update regularly: pip list --outdated
-# - Security check: safety check -r requirements.txt
-# - Vulnerability scan: bandit -r .
-#
-# Installation:
-#   python -m venv venv
-#   source venv/bin/activate  # On Windows: venv\Scripts\activate
-#   pip install --upgrade pip
-#   pip install -r requirements.txt
-#
-# Troubleshooting:
-#   - If installation fails, try installing packages individually
-#   - Some packages may require system dependencies (e.g., libssl-dev)
-#   - For ARM processors (M1/M2 Mac), some packages may need Rosetta
-#   - Use pip install --no-cache-dir for fresh installations
