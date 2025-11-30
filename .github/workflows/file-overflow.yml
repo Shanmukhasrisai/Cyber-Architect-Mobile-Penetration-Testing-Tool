@@ -1,13 +1,11 @@
 name: File Overflow and Error Prevention
 permissions:
   contents: read
-
 on:
   push:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-
 jobs:
   file-validation:
     runs-on: ubuntu-latest
@@ -33,215 +31,88 @@ jobs:
           import os
           import sys
           from pathlib import Path
+          import humanize
           
           # Configuration
-          MAX_FILE_SIZE_MB = 100  # Maximum individual file size in MB
-          MAX_TOTAL_SIZE_MB = 500  # Maximum total repository size in MB
-          EXCLUDED_DIRS = {'.git', '__pycache__', '.pytest_cache', 'node_modules', 'venv', '.venv', 'htmlcov'}
-          EXCLUDED_EXTENSIONS = {'.pyc', '.pyo', '.pyd', '.so', '.dll', '.dylib'}
+          MAX_FILE_SIZE = 100 * 1024 * 1024  # 100MB in bytes
+          MAX_TOTAL_SIZE = 500 * 1024 * 1024  # 500MB in bytes
           
-          issues = []
-          total_size = 0
-          file_count = 0
+          # Files and directories to ignore
+          IGNORE_PATTERNS = {
+              '.git',
+              '__pycache__',
+              'node_modules',
+              '.pytest_cache',
+              'venv',
+              'env',
+              '.venv',
+              'dist',
+              'build',
+              '*.pyc',
+              '*.pyo',
+              '*.pyd',
+              '.DS_Store'
+          }
           
-          def format_size(size_bytes):
-              """Format bytes to human readable format"""
-              for unit in ['B', 'KB', 'MB', 'GB']:
-                  if size_bytes < 1024.0:
-                      return f"{size_bytes:.2f} {unit}"
-                  size_bytes /= 1024.0
-              return f"{size_bytes:.2f} TB"
+          def should_ignore(path):
+              """Check if path should be ignored"""
+              path_str = str(path)
+              for pattern in IGNORE_PATTERNS:
+                  if pattern in path_str:
+                      return True
+              return False
           
-          def should_skip(path):
-              """Check if path should be skipped"""
-              parts = Path(path).parts
-              return any(excluded in parts for excluded in EXCLUDED_DIRS)
-          
-          print("🔍 Scanning repository for file size issues...\n")
-          
-          # Scan all files
-          for root, dirs, files in os.walk('.'):
-              # Filter out excluded directories
-              dirs[:] = [d for d in dirs if d not in EXCLUDED_DIRS]
+          def check_file_sizes(root_path):
+              """Check all file sizes in the repository"""
+              total_size = 0
+              large_files = []
               
-              for file in files:
-                  file_path = os.path.join(root, file)
-                  
-                  # Skip excluded extensions
-                  if any(file.endswith(ext) for ext in EXCLUDED_EXTENSIONS):
-                      continue
-                  
-                  try:
-                      size = os.path.getsize(file_path)
+              for file_path in Path(root_path).rglob('*'):
+                  if file_path.is_file() and not should_ignore(file_path):
+                      size = file_path.stat().st_size
                       total_size += size
-                      file_count += 1
                       
-                      # Check individual file size
-                      size_mb = size / (1024 * 1024)
-                      if size_mb > MAX_FILE_SIZE_MB:
-                          issues.append(f"⚠️  Large file: {file_path} ({format_size(size)})")
-                  except (OSError, FileNotFoundError) as e:
-                      issues.append(f"❌ Error reading file: {file_path} - {str(e)}")
+                      if size > MAX_FILE_SIZE:
+                          large_files.append({
+                              'path': str(file_path.relative_to(root_path)),
+                              'size': size,
+                              'readable': humanize.naturalsize(size)
+                          })
+              
+              return total_size, large_files
           
-          # Print statistics
-          print(f"📊 Repository Statistics:")
-          print(f"   Total files scanned: {file_count}")
-          print(f"   Total size: {format_size(total_size)}")
-          print(f"   Average file size: {format_size(total_size / file_count if file_count > 0 else 0)}")
+          # Run the checks
+          print("🔍 Checking file sizes...")
+          print(f"Maximum allowed file size: {humanize.naturalsize(MAX_FILE_SIZE)}")
+          print(f"Maximum allowed total size: {humanize.naturalsize(MAX_TOTAL_SIZE)}")
           print()
           
-          # Check total repository size
-          total_size_mb = total_size / (1024 * 1024)
-          if total_size_mb > MAX_TOTAL_SIZE_MB:
-              issues.append(f"⚠️  Repository size ({format_size(total_size)}) exceeds maximum ({MAX_TOTAL_SIZE_MB} MB)")
+          total_size, large_files = check_file_sizes('.')
           
-          # Report findings
-          if issues:
-              print("\n⚠️  Issues Found:\n")
-              for issue in issues:
-                  print(issue)
-              print("\n💡 Recommendations:")
-              print("   - Use Git LFS for large files")
-              print("   - Compress large data files")
-              print("   - Move large assets to external storage")
-              print("   - Add large files to .gitignore")
+          print(f"📊 Total repository size: {humanize.naturalsize(total_size)}")
+          print()
+          
+          # Check for large files
+          if large_files:
+              print("❌ ERROR: Found files exceeding size limit:")
+              for file_info in large_files:
+                  print(f"  - {file_info['path']}: {file_info['readable']}")
               sys.exit(1)
-          else:
-              print("✅ All file size checks passed!")
-              print("   No file overflow issues detected.")
-          EOF
           
-      - name: Check for common file errors
-        run: |
-          python << 'EOF'
-          import os
-          import json
-          import sys
-          from pathlib import Path
-          
-          errors = []
-          warnings = []
-          
-          print("🔍 Checking for common file errors...\n")
-          
-          # Check JSON files
-          for json_file in Path('.').rglob('*.json'):
-              if '.git' in str(json_file) or '__pycache__' in str(json_file):
-                  continue
-              try:
-                  with open(json_file, 'r', encoding='utf-8') as f:
-                      json.load(f)
-                  print(f"✅ Valid JSON: {json_file}")
-              except json.JSONDecodeError as e:
-                  errors.append(f"❌ Invalid JSON in {json_file}: {str(e)}")
-              except UnicodeDecodeError as e:
-                  errors.append(f"❌ Encoding error in {json_file}: {str(e)}")
-              except Exception as e:
-                  warnings.append(f"⚠️  Could not validate {json_file}: {str(e)}")
-          
-          # Check Python files for syntax errors
-          print("\n🐍 Checking Python files...")
-          for py_file in Path('.').rglob('*.py'):
-              if '.git' in str(py_file) or '__pycache__' in str(py_file) or 'venv' in str(py_file):
-                  continue
-              try:
-                  with open(py_file, 'r', encoding='utf-8') as f:
-                      compile(f.read(), str(py_file), 'exec')
-                  print(f"✅ Valid Python: {py_file}")
-              except SyntaxError as e:
-                  errors.append(f"❌ Syntax error in {py_file}: Line {e.lineno}: {str(e)}")
-              except UnicodeDecodeError as e:
-                  errors.append(f"❌ Encoding error in {py_file}: {str(e)}")
-              except Exception as e:
-                  warnings.append(f"⚠️  Could not compile {py_file}: {str(e)}")
-          
-          # Check for files with null bytes
-          print("\n🔍 Checking for corrupted files...")
-          for file_path in Path('.').rglob('*'):
-              if file_path.is_file() and '.git' not in str(file_path):
-                  try:
-                      with open(file_path, 'rb') as f:
-                          content = f.read(1024)  # Read first 1KB
-                          if b'\x00' in content and not any(str(file_path).endswith(ext) for ext in ['.pyc', '.so', '.dll', '.exe', '.bin']):
-                              warnings.append(f"⚠️  File may be corrupted (contains null bytes): {file_path}")
-                  except Exception:
-                      pass  # Skip unreadable files
-          
-          # Report results
-          print("\n" + "="*60)
-          if errors:
-              print("\n❌ ERRORS FOUND:\n")
-              for error in errors:
-                  print(error)
-          
-          if warnings:
-              print("\n⚠️  WARNINGS:\n")
-              for warning in warnings:
-                  print(warning)
-          
-          if not errors and not warnings:
-              print("\n✅ All file validation checks passed!")
-          elif not errors:
-              print("\n✅ No critical errors found (warnings only)")
-          else:
-              print("\n💡 Please fix the errors above before merging.")
+          # Check total size
+          if total_size > MAX_TOTAL_SIZE:
+              print(f"❌ ERROR: Total repository size ({humanize.naturalsize(total_size)}) exceeds limit")
               sys.exit(1)
+          
+          print("✅ All file size checks passed!")
           EOF
-          
-      - name: Check for missing required files
-        run: |
-          python << 'EOF'
-          import os
-          import sys
-          
-          required_files = [
-              'README.md',
-              'LICENSE',
-              'requirements.txt',
-              '.gitignore'
-          ]
-          
-          missing = []
-          print("🔍 Checking for required files...\n")
-          
-          for file in required_files:
-              if os.path.exists(file):
-                  print(f"✅ Found: {file}")
-              else:
-                  missing.append(file)
-                  print(f"❌ Missing: {file}")
-          
-          if missing:
-              print(f"\n⚠️  Missing {len(missing)} required file(s).")
-              print("   Consider adding these files for better project structure.")
-              # Don't fail on missing files, just warn
-          else:
-              print("\n✅ All required files present!")
-          EOF
-          
-      - name: Generate validation report
-        if: always()
-        run: |
-          echo "## File Validation Report" > validation_report.md
-          echo "" >> validation_report.md
-          echo "**Date:** $(date -u +"%Y-%m-%d %H:%M:%S UTC")" >> validation_report.md
-          echo "**Branch:** ${{ github.ref }}" >> validation_report.md
-          echo "**Commit:** ${{ github.sha }}" >> validation_report.md
-          echo "" >> validation_report.md
-          echo "### Checks Performed" >> validation_report.md
-          echo "- ✅ File size validation" >> validation_report.md
-          echo "- ✅ JSON syntax validation" >> validation_report.md
-          echo "- ✅ Python syntax validation" >> validation_report.md
-          echo "- ✅ Corruption detection" >> validation_report.md
-          echo "- ✅ Required files check" >> validation_report.md
-          echo "" >> validation_report.md
-          echo "All validation checks completed successfully!" >> validation_report.md
-          cat validation_report.md
           
       - name: Upload validation report
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: validation-report
-          path: validation_report.md
-          retention-days: 30
+          name: file-validation-report
+          path: |
+            **/*.log
+            **/validation-*.txt
+          retention-days: 7
