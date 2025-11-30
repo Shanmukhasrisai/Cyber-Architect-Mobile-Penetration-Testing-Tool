@@ -1,4 +1,6 @@
 name: File Overflow and Error Prevention
+permissions:
+  contents: read
 
 on:
   push:
